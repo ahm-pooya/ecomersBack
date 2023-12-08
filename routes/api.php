@@ -14,6 +14,17 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
-    return $request->user();
+Route::group(['prefix' => 'v1'], function () {
+    Route::group(['prefix' => 'uploads'], function () {
+        Route::post('/upload', 'App\Http\Controllers\uploadController@uploadImage');
+        Route::get('/show/{file_id}', 'App\Http\Controllers\uploadController@showImage');
+    });
+    Route::group(['prefix' => 'auth'], function () {
+        Route::post('/login/mobile', 'App\Http\Controllers\loginController@loginwithmobile');
+        Route::post('/login/verify/{id}', 'App\Http\Controllers\loginController@verifyCodeForLogin');
+        Route::post('/login/resend/{id}', 'App\Http\Controllers\loginController@resendVerifyCode');
+        Route::post('/login/password', 'App\Http\Controllers\loginController@loginWithPassword');
+        Route::post('/password/verifycode/{id}', 'App\Http\Controllers\loginController@verifyCodeForResetPassword');
+        Route::post('/password/reset/{id}', 'App\Http\Controllers\loginController@resetPassword');
+    });
 });
