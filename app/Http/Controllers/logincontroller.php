@@ -156,6 +156,7 @@ class logincontroller extends Controller
             $newpassword = request('password');
             if ($user) {
                 $user->password = $newpassword;
+                $user->save();
             }
             return response()->json(['user' => $user]);
         } else {
