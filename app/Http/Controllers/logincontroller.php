@@ -11,7 +11,7 @@ use App\Models\User;
 class logincontroller extends Controller
 {
     private function validateMobile($mobile)
-    { 
+    {ghfghgff
         $validator = Validator::make(
             ['mobile' => $mobile],
             [
