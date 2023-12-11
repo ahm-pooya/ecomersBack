@@ -31,6 +31,8 @@ class uploadcontroller extends Controller
         $file = $request->file('file');
         $name = time() . '.' . $file->getClientOriginalExtension();
         $uuid = Uuid::uuid4()->toString();
+
+
         if ($requestType == UploadType::User) {
             $Path = public_path('/files/images/user');
             $file_address = '/files/images/user/' . $name;
@@ -40,6 +42,8 @@ class uploadcontroller extends Controller
             $Path = public_path('/files/images/product');
             $file_address = '/files/images/product/' . $name;
             $type = Uploadtype::Product;
+
+            
         }
         if ($Path != null && $file_address != null && $type != null) {
             $file->move($Path, $name);
