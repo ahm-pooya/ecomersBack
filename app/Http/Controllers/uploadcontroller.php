@@ -19,54 +19,46 @@ class uploadcontroller extends Controller
                 'type' => 'required',
             ],
             [
-                'file.required' => 'upload image',
-                'file.mimes' => 'wrong format',
-                'type.required' => 'error',
+                'file.required' => 'عکس خود را اپلود کنید',
+                'file.mimes' => 'فرمت عکس اشتباه است',
+                'type.required' => 'خطا رخ داده است',
             ]
         );
         if ($validator->fails()) {
-            return response()->json(['error' => $validator->errors()->first()]);
+            return response()->json(['error' => $validator->errors()->first()], 400);
         }
         $requestType = $request->type;
         $file = $request->file('file');
         $name = time() . '.' . $file->getClientOriginalExtension();
         $uuid = Uuid::uuid4()->toString();
-
-
         if ($requestType == UploadType::User) {
-            $Path = public_path('/files/images/user');
+            $path =  public_path('/files/images/user');
             $file_address = '/files/images/user/' . $name;
-            $type = Uploadtype::User;
+            $type =  Uploadtype::User;
         }
         if ($requestType == Uploadtype::Product) {
-            $Path = public_path('/files/images/product');
+            $path = public_path('/files/images/product');
             $file_address = '/files/images/product/' . $name;
             $type = Uploadtype::Product;
-
-            
         }
-        if ($Path != null && $file_address != null && $type != null) {
-            $file->move($Path, $name);
+        if ($path != null && $file_address != null && $type != null) {
+            $file->move($path, $name);
             $upload = Upload::create([
                 'name' => $name,
                 'address' => $file_address,
                 'file_id' => $uuid,
                 'type' => $type,
             ]);
-            return response()->json(['id' => $upload->id, 'address' => $upload->address, 'uuid' => $upload->file_id]);
+            return response()->json(['id' => $upload->id, 'address' => $upload->address, 'uuid' => $upload->file_id], 200);
         }
     }
     public function showImage($file_id)
     {
         if (Upload::where(['file_id' => $file_id])->exists()) {
             $data = Upload::where('file_id', $file_id)->first();
-            if ($data) {
-                return response()->json(['data' => $data]);
-            } else {
-                return response()->json(['error' => 'wrong data']);
-            }
+            return response()->json(['data' => $data], 200);
         } else {
-            return response()->json(['error' => 'not found']);
+            return response()->json(['error' => 'عکس پیدا نشد'], 404);
         }
     }
 }
